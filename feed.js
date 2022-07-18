@@ -26,6 +26,22 @@ $(function() { // Document ready function
     'wide': "",
   }
 
+  //Fields
+  let fields = {
+    'title': 'event_title',
+    'subtitle': 'event_subtitle',
+    'image_url': 'image_url',
+    'date': 'date_start',
+    'time_start': 'time_start',
+    'time_end': 'time_end',
+    'location': 'building_name',
+    'links': 'links',
+    'description': 'description',
+    'page_link': 'permalink',
+    'type': 'event_type',
+    'tags': 'tags',
+  }
+
   //Events data
   let events;
   let filteredEvents;
@@ -38,7 +54,7 @@ $(function() { // Document ready function
     'event_title': "See whats Happening @ Michigan",
     'date_start': "",
     'location_name': "",
-    'links': "",
+    'links': "links",
   }
 
   //advance search
@@ -214,16 +230,16 @@ $(function() { // Document ready function
   // create html for object.
   function buildEvent(obj,count) {
     let html = '<div class="event'+params['wide']+'" style="flex:0 0 '+(100/state.elementPerRow)+'%">';
-    let image_url = (obj.image_url) ? obj.image_url: "https://events.umich.edu/images/default190@2x.png";
-    let image = '<a class = "image-link" href ='+obj.permalink+'><div class = "event-image'+params['wide']+'" style="background-image: url('+image_url+')"></div></a>';
-    let title = obj.event_title;
-    let date = obj.date_start;
-    let links = obj.links;
-    let location_name = obj.location_name;
+    let image_url = (obj.fields['image_url']) ? obj.fields['image_url']: "https://events.umich.edu/images/default190@2x.png";
+    let image = '<a class = "image-link" href ='+obj.fields['page_link']+'><div class = "event-image'+params['wide']+'" style="background-image: url('+image_url+')"></div></a>';
+    let title = obj.fields['title'];
+    let date = obj.fields['date'];
+    let links = obj.fields['links'];
+    let location_name = obj.fields['location'];
     html += image;
     html += '<div class = "event-text'+params['wide']+'">';
     if(config['pop-up']) html += '<button value = "'+count+'" class = "event-title"><h3>'+title+'</h3></button>';
-    else html += '<a href ='+obj.permalink+'><h3>'+title+'</h3></a>';
+    else html += '<a href ='+obj.fields['page_link']+'><h3>'+title+'</h3></a>';
     if(date){
       html += '<ul><li><i class="fa fa-fw fa-calendar"></i><span> Date: '+date+'</span></li>';
     }
@@ -250,43 +266,43 @@ $(function() { // Document ready function
   };
 
   function buildModal(obj){
-    let titles = '<h2>'+obj.event_title+'</h2>';
-    let image_url = (obj.image_url) ? obj.image_url: "https://events.umich.edu/images/default190@2x.png";
+    let titles = '<h2>'+obj.fields['title']+'</h2>';
+    let image_url = (obj.fields['image_url']) ? obj.fields['image_url']: "https://events.umich.edu/images/default190@2x.png";
     let html = '<div class = "feed-modal-side">';
-    let hours = obj.time_start.substring(0,2);
-    let minutes = obj.time_start.substring(3,5);
+    let hours = obj.fields['time_start'].substring(0,2);
+    let minutes = obj.fields['time_start'].substring(3,5);
     let ampm = parseInt(hours) >= 12 ? 'pm' : 'am';
     let strStartTime;
     let strEndTime;
     $('#feed-modal-header h2, #feed-modal-header h4').remove();
     $('#feed-modal-body').empty();
     $('#feed-modal-event-link').remove();
-    if(obj.event_subtitle != "") titles += '<h4>'+obj.event_subtitle+'</h4>';
+    if(obj.fields['subtitle'] != "") titles += '<h4>'+obj.fields['subtitle']+'</h4>';
     $('#feed-modal-header').append(titles);
     html += '<div class = "feed-modal-image" style="background-image: url('+image_url+')"></div>';
-    if($( window ).width() > 800) html += buildModalLinks(obj);
+    if($(window).width() > 800) html += buildModalLinks(obj);
     html += '</div>';
     html += '<div class = "feed-modal-main"><div class= "feed-modal-text">';
-    html += obj.description;
+    html += obj.fields['description'];
     html += '</div><hr><ul><li><i class="fa fa-fw fa-calendar"></i>';
-    html += '<span> '+obj.date_start.replaceAll('-', '/')+'</span></li>';
+    html += '<span> '+obj.fields['date'].replaceAll('-', '/')+'</span></li>';
     hours = ((hours + 11) % 12 + 1);
     strStartTime = hours + ':' + minutes + ampm;
-    hours = obj.time_end.substring(0,2);
-    minutes = obj.time_end.substring(3,5);
+    hours = obj.fields['time_end'].substring(0,2);
+    minutes = obj.fields['time_end'].substring(3,5);
     ampm = parseInt(hours) >= 12 ? 'pm' : 'am';
     hours = ((hours + 11) % 12 + 1);
     strEndTime = hours + ':' + minutes + ampm;
     html += '<li><i class="fa fa-fw fa-clock-o"></i><span> '+strStartTime+' - '+strEndTime+'</span></li>';
-    if(obj.location_name) html += '<li><i class="fa fa-location-arrow fa-fw"></i><span> Location: '+obj.location_name+'</span></li>';
+    if(obj.fields['location']) html += '<li><i class="fa fa-location-arrow fa-fw"></i><span> Location: '+obj.fields['location']+'</span></li>';
     html += '</ul></div>';
     if($( window ).width() <= 800) html += buildModalLinks(obj);
     $('#feed-modal-body').append(html);
-    $('#feed-modal-body').after('<a id = "feed-modal-event-link" href ='+obj.permalink+'>View on Happening @ Michigan'+'</a>');
+    $('#feed-modal-body').after('<a id = "feed-modal-event-link" href ='+obj.fields['page_link']+'>View on Happening @ Michigan'+'</a>');
   };
 
   function buildModalLinks(obj){
-    let links = obj.links;
+    let links = obj.fields['links'];
     let linkHtml = "";
     if(Object.keys(links).length > 0){
       linkHtml += '<div class = "small-title">related link</div>';
@@ -309,13 +325,13 @@ $(function() { // Document ready function
       let value = $("#search-input").val().toLowerCase();
       let eventSet = new Set();
       let count = 0;
-      showEvents = filteredEvents.filter(obj => obj.event_type.toLowerCase().includes(value));
-      for(let i = count; i < Object.keys(showEvents).length; i++) eventSet.add(showEvents[i].id);
+      showEvents = filteredEvents.filter(obj => obj.fields['type'].toLowerCase().includes(value));
+      for(let i = count; i < Object.keys(showEvents).length; i++) eventSet.add(showEvents[i].fields['title']);
       count = Object.keys(showEvents).length;
-      showEvents = showEvents.concat(filteredEvents.filter(obj => obj.tags.find(element => element.toLowerCase().includes(value))&& !eventSet.has(obj.id)));
-      for(let i = count; i < Object.keys(showEvents).length; i++) eventSet.add(showEvents[i].id);
+      showEvents = showEvents.concat(filteredEvents.filter(obj => obj.fields['tags'].find(element => element.toLowerCase().includes(value))&& !eventSet.has(obj.fields['title'])));
+      for(let i = count; i < Object.keys(showEvents).length; i++) eventSet.add(showEvents[i].fields['title']);
       count = Object.keys(showEvents).length;
-      showEvents = showEvents.concat(filteredEvents.filter(obj => (obj.event_title.toLowerCase().includes(value)|| obj.building_name.toLowerCase().includes(value) || obj.description.toLowerCase().includes(value)) && !eventSet.has(obj.id)));
+      showEvents = showEvents.concat(filteredEvents.filter(obj => (obj.fields['title'].toLowerCase().includes(value)|| obj.fields['location'].toLowerCase().includes(value) || obj.fields['description'].toLowerCase().includes(value)) && !eventSet.has(obj.fields['title'])));
     }
     state['page'] = 1;
     pagination();
@@ -371,22 +387,22 @@ $(function() { // Document ready function
       if($(this).is(':checked')) tagChecked.add($(this).val());
     });
     if(typeChecked.size != 0){
-      filteredEvents = filteredEvents.filter(obj => typeChecked.has(obj.event_type));
+      filteredEvents = filteredEvents.filter(obj => typeChecked.has(obj.fields['type']));
       if(tagChecked.size != 0) filteredEvents = filteredEvents.concat(events.filter(function(obj){
-        for(tag of obj.tags){
+        for(tag of obj.fields['tags']){
           if(tagChecked.has(tag)) return true;
         }
         return false;
       }));
     }
     else if(tagChecked.size != 0) filteredEvents = filteredEvents.filter(function(obj){
-      for(tag of obj.tags){
+      for(tag of obj.fields['tags']){
         if(tagChecked.has(tag)) return true;
       }
       return false;
     });
-    if($('#search-start-date').val()) filteredEvents = filteredEvents.filter(obj => obj.date_start >= $('#search-start-date').val());
-    if($('#search-end-date').val()) filteredEvents = filteredEvents.filter(obj => obj.date_start <= $('#search-end-date').val());        
+    if($('#search-start-date').val()) filteredEvents = filteredEvents.filter(obj => obj.fields['date'] >= $('#search-start-date').val());
+    if($('#search-end-date').val()) filteredEvents = filteredEvents.filter(obj => obj.fields['date'] <= $('#search-end-date').val());        
     search();
   };
 
