@@ -49,11 +49,11 @@ $(function() { // Document ready function
 
   //Event placeholder
   let placeholder = {
+    'event_title': "See whats Happening @ Michigan",
     'image_url': "https://events.umich.edu/images/default-events-module.png",
-    'page_link': "https://events.umich.edu/",
-    'title': "See whats Happening @ Michigan",
+    'permalink': "https://events.umich.edu/",
     'date_start': "",
-    'location': "",
+    'building_name': "",
     'links': [],
   }
 
@@ -196,9 +196,14 @@ $(function() { // Document ready function
         buildModal(showEvents[state.currentEvent]);
       });
       $(".event-title").click(function() {
-        $('#feed-modal').show();
         state.currentEvent = $(this).val();
-        buildModal(showEvents[state.currentEvent]);
+        if(state.currentEvent == -1){
+            window.open(placeholder[fields.page_link]);
+        }
+        else{
+            $('#feed-modal').show();
+            buildModal(showEvents[state.currentEvent]);
+        }
       });
     }
     pageButton();
