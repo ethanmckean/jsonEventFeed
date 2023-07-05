@@ -125,7 +125,7 @@ $(function () { // Document ready function
       linkToHappening = url.replace("/json", "");
       linkToHappeningHtml = '<div class = "feed-container center link-to-happening"><a href = "' + linkToHappening + '">View the full page on Happening @ Michigan</a></div>'
       $('#happening-feed').append(linkToHappeningHtml);
-      paginationHtml = '<div class = "feed-container center"><div id="pagination-wrapper"></div></div>';
+      //paginationHtml = '<div class = "feed-container center"><div id="pagination-wrapper"></div></div>';
       $('#happening-feed').append(paginationHtml);
       if (config.popup) {
         let modalHtml = '<div id="feed-modal" class="feed-modal"><div class="feed-modal-content"><div id = "feed-modal-header" class="feed-modal-header"><span id = "feed-modal-close" class="feed-modal-close">&times;</span></div><div id = "feed-modal-body" class="feed-modal-body feed-modal-row"></div></div></div>';
