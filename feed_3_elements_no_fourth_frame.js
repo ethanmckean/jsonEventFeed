@@ -171,17 +171,12 @@ $(function () { // Document ready function
     trimStart = (state.page - 1) * params.elementPerPage;
     //trimEnd = (trimStart + params.elementPerPage < state.count) ? trimStart + params.elementPerPage : state.count;
     trimEnd = 3;
-    for (let i = trimStart; i <= trimEnd; i++) { // loop though list of objects
+    for (let i = trimStart; i < trimEnd; i++) { // loop though list of objects
       if ((i - trimStart) % state.elementPerRow == 0) {
         row = '<div class="event-row feed-container">';
         $('#event-feed').append(row);
       }
-      if (i == trimEnd) {
-        html = buildEvent(placeholder, -1);
-      }
-      else {
         html = buildEvent(showEvents[i], i); // build html for object
-      }
       $('.event-row').last().append(html); // append each object to the <div id="happening-feed"></div>
     }
 
