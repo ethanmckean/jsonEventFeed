@@ -21,7 +21,7 @@ $(function () { // Document ready function
 
   //Params
   let params = {
-    'elementWidth': 500,
+    'elementWidth': 300,
     'wide': "",
     'elementPerPage': 30,
   }
